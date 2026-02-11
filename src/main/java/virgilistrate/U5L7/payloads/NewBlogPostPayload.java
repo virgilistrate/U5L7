@@ -8,9 +8,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class NewBlogPostPayload {
-
     private String categoria;
     private String titolo;
     private String contenuto;
     private int tempoDiLettura;
+    private long authorId;
 }

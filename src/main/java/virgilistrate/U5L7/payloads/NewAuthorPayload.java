@@ -12,5 +12,5 @@ public class NewAuthorPayload {
     private String nome;
     private String cognome;
     private String email;
-    private String dataDiNascita; // formato YYYY-MM-DD
+    private String dataDiNascita;
 }
