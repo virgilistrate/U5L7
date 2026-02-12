@@ -1,37 +1,47 @@
 package virgilistrate.U5L7.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "authors")
 public class Author {
 
-    private long id;
+    @Id
+    @GeneratedValue
+    private UUID id;
+
     private String nome;
     private String cognome;
+
+    @Column(unique = true)
     private String email;
+
     private LocalDate dataDiNascita;
+
     private String avatar;
+
     private LocalDateTime createdAt;
 
-    public Author(String nome, String cognome, String email, LocalDate dataDiNascita) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = email;
-        this.dataDiNascita = dataDiNascita;
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<BlogPost> blogPosts;
 
+    @PrePersist
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
-
-        Random rndm = new Random();
-        this.id = rndm.nextInt(1, 1000);
-
-        this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
+        if (this.avatar == null) this.avatar = "https://ui-avatars.com/api/?name=" + this.nome + "+" + this.cognome;
     }
 }

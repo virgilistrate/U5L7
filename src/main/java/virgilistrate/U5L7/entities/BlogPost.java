@@ -1,38 +1,42 @@
 package virgilistrate.U5L7.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "blog_posts")
 public class BlogPost {
 
-    private long id;
+    @Id
+    @GeneratedValue
+    private UUID id;
+
     private String categoria;
     private String titolo;
     private String cover;
+
+    @Column(columnDefinition = "TEXT")
     private String contenuto;
+
     private int tempoDiLettura;
-    private long authorId; // relazione tramite id autore
+
     private LocalDateTime createdAt;
 
-    public BlogPost(String categoria, String titolo, String contenuto, int tempoDiLettura, long authorId) {
-        this.categoria = categoria;
-        this.titolo = titolo;
-        this.contenuto = contenuto;
-        this.tempoDiLettura = tempoDiLettura;
-        this.authorId = authorId;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 
+    @PrePersist
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
-
-        Random rndm = new Random();
-        this.id = rndm.nextInt(1, 1000);
-
-        this.cover = "https://picsum.photos/seed/" + this.id + "/200/300";
+        if (this.cover == null) this.cover = "https://picsum.photos/seed/" + UUID.randomUUID() + "/200/300";
     }
 }
